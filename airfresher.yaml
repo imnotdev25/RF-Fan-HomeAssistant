@@ -1,0 +1,43 @@
+# ESPHome YAML for Godrej Aer Smart Matic
+# Flash to an ESP32 with BLE support
+# Replace <MAC Address> with your unit’s MAC
+
+esphome:
+  name: aermaticbridge
+
+esp32:
+  board: esp32-c6-devkitc-1
+  variant: esp32c6
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "<SSID>"
+  password: "<PASSWORD>"
+
+# Enable logging & OTA
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+
+
+# BLE Client definition
+ble_client:
+  - mac_address: "<MAC-ADDRESS>"
+    id: godrej_aer
+
+# Virtual switch that triggers a spray
+switch:
+  - platform: template
+    name: "Aer Matic Spray"
+    turn_on_action:
+      - ble_client.ble_write:
+          id: godrej_aer
+          service_uuid: 6E400000-B5A3-F393-E0A9-E50E24DCCA9E
+          characteristic_uuid: 6E400003-B5A3-F393-E0A9-E50E24DCCA9E
+          value: [0xbf, 0x62, 0x6D, 0x54, 0x18, 0x68, 0x62, 0x6D, 0x4E, 0x18, 0x9A, 0x62, 0x72, 0x49, 0x00, 0xFF]
