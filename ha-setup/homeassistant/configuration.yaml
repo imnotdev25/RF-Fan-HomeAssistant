@@ -23,20 +23,23 @@ http:
 # The built-in HA auth is always kept as a fallback.
 # OIDC via Logto requires the `ha-oidc-auth` HACS custom component.
 # Install it through HACS → Integrations, then uncomment the oidc block.
-homeassistant:
-  auth_providers:
-    - type: homeassistant          # Local HA accounts (keep as fallback)
-    # ── Logto OIDC ─────────────────────────────────────────────────────
-    # Requires: https://github.com/christiaangoossens/hass-oidc-auth (HACS)
-    # After installing the HACS integration, uncomment the block below:
-    # - type: oidc
-    #   id: logto
-    #   name: "Sign in with Logto"
-    #   issuer: "https://your-logto-domain/oidc"
-    #   client_id: !secret logto_client_id
-    #   client_secret: !secret logto_client_secret
-    #   # Scopes returned by Logto
-    #   scope: "openid profile email"
+#homeassistant:
+#  auth_providers:
+#    - type: homeassistant          # always keep as fallback
+#
+#    - type: custom_auth_provider   # this is the type hass-oidc-auth registers
+#      module_name: custom_components.oidc
+#      config:
+#        client_id: !secret logto_client_id
+#        client_secret: !secret logto_client_secret
+#        discovery_url: "https://auth.yourdomain.com/oidc/.well-known/openid-configuration"
+#        # The redirect URI registered in Logto
+#        redirect_uri: "https://ha.yourdomain.com/auth/oidc/callback"
+#        # User claim to use as the HA username
+#        name_claim: "name"
+#        username_claim: "email"
+
+
 
 # ── Recorder — PostgreSQL for long-term history ────────────────────────────
 recorder:

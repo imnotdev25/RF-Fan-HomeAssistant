@@ -272,17 +272,21 @@ http:
     - 192.168.0.0/16
 
 # ── Authentication ────────────────────────────────────────────────
-homeassistant:
-  auth_providers:
-    - type: homeassistant
-    # ── Logto OIDC (requires hass-oidc-auth via HACS) ──────────────
-    # - type: oidc
-    #   id: logto
-    #   name: "Sign in with Logto"
-    #   issuer: "https://auth.yourdomain.com/oidc"
-    #   client_id: !secret logto_client_id
-    #   client_secret: !secret logto_client_secret
-    #   scope: "openid profile email"
+#homeassistant:
+#  auth_providers:
+#    - type: homeassistant          # always keep as fallback
+#
+#    - type: custom_auth_provider   # this is the type hass-oidc-auth registers
+#      module_name: custom_components.oidc
+#      config:
+#        client_id: !secret logto_client_id
+#        client_secret: !secret logto_client_secret
+#        discovery_url: "https://auth.yourdomain.com/oidc/.well-known/openid-configuration"
+#        # The redirect URI registered in Logto
+#        redirect_uri: "https://ha.yourdomain.com/auth/oidc/callback"
+#        # User claim to use as the HA username
+#        name_claim: "name"
+#        username_claim: "email"
 
   # ── Package includes — add your own yaml files here ─────────────
   packages: {}
@@ -329,6 +333,8 @@ logger:
 
 lovelace:
   mode: storage
+
+fans: !include rf_fans.yaml
 
 # automation: !include automations.yaml
 # script:     !include scripts.yaml
