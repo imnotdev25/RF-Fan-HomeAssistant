@@ -274,25 +274,18 @@ http:
 # ── Authentication ────────────────────────────────────────────────
 #homeassistant:
 #  auth_providers:
-#    - type: homeassistant          # always keep as fallback
-#
 #    - type: custom_auth_provider   # this is the type hass-oidc-auth registers
 #      module_name: custom_components.oidc
 #      config:
 #        client_id: !secret logto_client_id
 #        client_secret: !secret logto_client_secret
-#        discovery_url: "https://auth.yourdomain.com/oidc/.well-known/openid-configuration"
+#        discovery_url: !secret logto_discovery_url
 #        # The redirect URI registered in Logto
-#        redirect_uri: "https://ha.yourdomain.com/auth/oidc/callback"
+#        redirect_uri: !secret logto_redirect_uri
 #        # User claim to use as the HA username
 #        name_claim: "name"
 #        username_claim: "email"
 
-  # ── Package includes — add your own yaml files here ─────────────
-  packages: {}
-  # Example — include rf-fans.yaml as a package:
-  #   packages:
-  #     rf_fans: !include rf-fans.yaml
 
 # ── Recorder — PostgreSQL long-term history ──────────────────────
 recorder:
@@ -351,6 +344,8 @@ recorder_db_url: "postgresql://homeassistant:CHANGE_ME@localhost:5432/homeassist
 homekit_advertise_ip: "192.168.1.100"
 logto_client_id: "your_ha_client_id"
 logto_client_secret: "your_ha_client_secret"
+logto_discovery_url: "https://auth.yourdomain.com/oidc/.well-known/openid-configuration"
+logto_redirect_uri: "https://ha.yourdomain.com/auth/oidc/callback"
 # mqtt_username: ""
 # mqtt_password: ""
 '
