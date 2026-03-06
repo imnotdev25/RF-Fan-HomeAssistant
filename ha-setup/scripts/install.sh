@@ -272,19 +272,15 @@ http:
     - 192.168.0.0/16
 
 # ── Authentication ────────────────────────────────────────────────
-#homeassistant:
-#  auth_providers:
-#    - type: custom_auth_provider   # this is the type hass-oidc-auth registers
-#      module_name: custom_components.oidc
-#      config:
-#        client_id: !secret logto_client_id
-#        client_secret: !secret logto_client_secret
-#        discovery_url: !secret logto_discovery_url
-#        # The redirect URI registered in Logto
-#        redirect_uri: !secret logto_redirect_uri
-#        # User claim to use as the HA username
-#        name_claim: "name"
-#        username_claim: "email"
+auth_oidc:
+  client_id: !secret logto_client_id
+  client_secret: !secret logto_client_secret
+  discovery_url: !secret logto_discovery_url
+
+
+homeassistant:
+  packages:
+    rf_fans: !include rf-fans-buttons.yaml   # ← HA looks for /config/rf-fans-buttons.yaml
 
 
 # ── Recorder — PostgreSQL long-term history ──────────────────────
@@ -326,8 +322,6 @@ logger:
 
 lovelace:
   mode: storage
-
-fans: !include rf_fans.yaml
 
 # automation: !include automations.yaml
 # script:     !include scripts.yaml

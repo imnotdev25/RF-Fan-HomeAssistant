@@ -1,251 +1,768 @@
-template:
-  - button:
-      # ========== LIVING ROOM FAN ==========
-      - name: "Living Room Fan Power"
-        icon: "mdi:fan"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: power
+# ═══════════════════════════════════════════════════════════════════════════
+#  RF Fans — Lovelace Dashboard Card
+#
+#  Requires (install via HACS → Frontend):
+#    • custom:button-card    (by RomRider)
+#    • custom:layout-card    (by thomasloven)
+#    • custom:vertical-stack-in-card  (by ofekashery)  ← optional, for title
+#
+#  Usage:
+#    Dashboard → Edit → Add Card → Manual → paste this YAML
+#
+#  Layout per fan row:
+#    [ Fan Label ] [ Power ] [ Light ] [ 1 ][ 2 ][ 3 ][ 4 ][ 5 ][ 6 ][ 7 ] [ Rev ] [ Smart ] [ Natural ] [ ⏱Off ][ ⏱2H ][ ⏱4H ][ ⏱8H ]
+#
+#  Split into 3 rows per fan for readability:
+#    Row 1 — Power + Light + Speeds 1-7
+#    Row 2 — Reverse + Smart + Natural
+#    Row 3 — Timers
+# ═══════════════════════════════════════════════════════════════════════════
 
-      - name: "Living Room Fan Light"
-        icon: "mdi:lightbulb"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: light
+# ── Shared button-card style templates (add to your button_card_templates
+#    section in lovelace yaml, or inline as shown below) ─────────────────
+#
+# Each button uses the same compact style — icon + name below it, auto color
+# ─────────────────────────────────────────────────────────────────────────
 
-      - name: "Living Room Fan Speed 1"
-        icon: "mdi:fan-speed-1"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed1
+type: vertical-stack
+cards:
 
-      - name: "Living Room Fan Speed 2"
-        icon: "mdi:fan-speed-2"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed2
+  # ════════════════════════════════════════════════════════════════════════
+  #  LIVING ROOM FAN
+  # ════════════════════════════════════════════════════════════════════════
+  - type: custom:vertical-stack-in-card
+    title: Living Room Fan
+    cards:
 
-      - name: "Living Room Fan Speed 3"
-        icon: "mdi:fan-speed-3"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed3
+      # ── Row 1: Power · Light · Speeds ─────────────────────────────────
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(9, 1fr)
+          place-items: stretch stretch
+          gap: 4px
+        cards:
 
-      - name: "Living Room Fan Speed 4"
-        icon: "mdi:numeric-4-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed4
+          - type: custom:button-card
+            name: Power
+            icon: mdi:fan
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_power
 
-      - name: "Living Room Fan Speed 5"
-        icon: "mdi:numeric-5-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed5
+          - type: custom:button-card
+            name: Light
+            icon: mdi:lightbulb
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_light
 
-      - name: "Living Room Fan Speed 6"
-        icon: "mdi:numeric-6-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed6
+          - type: custom:button-card
+            name: "1"
+            icon: mdi:fan-speed-1
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_1
 
-      - name: "Living Room Fan Speed 7"
-        icon: "mdi:numeric-7-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: speed7
+          - type: custom:button-card
+            name: "2"
+            icon: mdi:fan-speed-2
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_2
 
-      - name: "Living Room Fan Reverse"
-        icon: "mdi:rotate-right"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: reverse
+          - type: custom:button-card
+            name: "3"
+            icon: mdi:fan-speed-3
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_3
 
-      - name: "Living Room Fan Smart Mode"
-        icon: "mdi:brain"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: smart
+          - type: custom:button-card
+            name: "4"
+            icon: mdi:numeric-4-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_4
 
-      - name: "Living Room Fan Natural Mode"
-        icon: "mdi:leaf"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: natural
+          - type: custom:button-card
+            name: "5"
+            icon: mdi:numeric-5-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_5
 
-      - name: "Living Room Fan Timer Off"
-        icon: "mdi:timer-off"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: timer-off
+          - type: custom:button-card
+            name: "6"
+            icon: mdi:numeric-6-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_6
 
-      - name: "Living Room Fan Timer 2H"
-        icon: "mdi:timer-2"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: timer-2h
+          - type: custom:button-card
+            name: "7"
+            icon: mdi:numeric-7-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_7
 
-      - name: "Living Room Fan Timer 4H"
-        icon: "mdi:timer-4"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: timer-4h
+      # ── Row 2: Reverse · Smart · Natural ──────────────────────────────
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(3, 1fr)
+          place-items: stretch stretch
+          gap: 4px
+        cards:
 
-      - name: "Living Room Fan Timer 8H"
-        icon: "mdi:timer-8"
-        press:
-          service: mqtt.publish
-          data:
-            topic: living-room-fan
-            payload: timer-8h
+          - type: custom:button-card
+            name: Reverse
+            icon: mdi:rotate-right
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_reverse
 
-      # ========== BEDROOM FAN ==========
-      - name: "Bedroom Fan Power"
-        icon: "mdi:fan"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: power
+          - type: custom:button-card
+            name: Smart
+            icon: mdi:brain
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_smart_mode
 
-      - name: "Bedroom Fan Light"
-        icon: "mdi:lightbulb"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: light
+          - type: custom:button-card
+            name: Natural
+            icon: mdi:leaf
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_natural_mode
 
-      - name: "Bedroom Fan Speed 1"
-        icon: "mdi:fan-speed-1"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed1
+      # ── Row 3: Timers ─────────────────────────────────────────────────
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(4, 1fr)
+          place-items: stretch stretch
+          gap: 4px
+        cards:
 
-      - name: "Bedroom Fan Speed 2"
-        icon: "mdi:fan-speed-2"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed2
+          - type: custom:button-card
+            name: Timer Off
+            icon: mdi:timer-off
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_off
 
-      - name: "Bedroom Fan Speed 3"
-        icon: "mdi:fan-speed-3"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed3
+          - type: custom:button-card
+            name: 2 Hours
+            icon: mdi:timer-2
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_2h
 
-      - name: "Bedroom Fan Speed 4"
-        icon: "mdi:numeric-4-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed4
+          - type: custom:button-card
+            name: 4 Hours
+            icon: mdi:timer-4
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_4h
 
-      - name: "Bedroom Fan Speed 5"
-        icon: "mdi:numeric-5-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed5
+          - type: custom:button-card
+            name: 8 Hours
+            icon: mdi:timer-8
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_8h
 
-      - name: "Bedroom Fan Speed 6"
-        icon: "mdi:numeric-6-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed6
+  # ════════════════════════════════════════════════════════════════════════
+  #  BEDROOM FAN
+  # ════════════════════════════════════════════════════════════════════════
+  - type: custom:vertical-stack-in-card
+    title: Bedroom Fan
+    cards:
 
-      - name: "Bedroom Fan Speed 7"
-        icon: "mdi:numeric-7-box"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: speed7
+      # ── Row 1: Power · Light · Speeds ─────────────────────────────────
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(9, 1fr)
+          place-items: stretch stretch
+          gap: 4px
+        cards:
 
-      - name: "Bedroom Fan Reverse"
-        icon: "mdi:rotate-right"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: reverse
+          - type: custom:button-card
+            name: Power
+            icon: mdi:fan
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_power
 
-      - name: "Bedroom Fan Smart Mode"
-        icon: "mdi:brain"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: smart
+          - type: custom:button-card
+            name: Light
+            icon: mdi:lightbulb
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_light
 
-      - name: "Bedroom Fan Natural Mode"
-        icon: "mdi:leaf"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: natural
+          - type: custom:button-card
+            name: "1"
+            icon: mdi:fan-speed-1
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_1
 
-      - name: "Bedroom Fan Timer Off"
-        icon: "mdi:timer-off"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: timer-off
+          - type: custom:button-card
+            name: "2"
+            icon: mdi:fan-speed-2
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_2
 
-      - name: "Bedroom Fan Timer 2H"
-        icon: "mdi:timer-2"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: timer-2h
+          - type: custom:button-card
+            name: "3"
+            icon: mdi:fan-speed-3
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_3
 
-      - name: "Bedroom Fan Timer 4H"
-        icon: "mdi:timer-4"
-        press:
-          service: mqtt.publish
-          data:
-            topic: bedroom-fan
-            payload: timer-4h
+          - type: custom:button-card
+            name: "4"
+            icon: mdi:numeric-4-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_4
+
+          - type: custom:button-card
+            name: "5"
+            icon: mdi:numeric-5-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_5
+
+          - type: custom:button-card
+            name: "6"
+            icon: mdi:numeric-6-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_6
+
+          - type: custom:button-card
+            name: "7"
+            icon: mdi:numeric-7-box
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_7
+
+      # ── Row 2: Reverse · Smart · Natural ──────────────────────────────
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(3, 1fr)
+          place-items: stretch stretch
+          gap: 4px
+        cards:
+
+          - type: custom:button-card
+            name: Reverse
+            icon: mdi:rotate-right
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_reverse
+
+          - type: custom:button-card
+            name: Smart
+            icon: mdi:brain
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_smart_mode
+
+          - type: custom:button-card
+            name: Natural
+            icon: mdi:leaf
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_natural_mode
+
+      # ── Row 3: Timers ─────────────────────────────────────────────────
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(4, 1fr)
+          place-items: stretch stretch
+          gap: 4px
+        cards:
+
+          - type: custom:button-card
+            name: Timer Off
+            icon: mdi:timer-off
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_off
+
+          - type: custom:button-card
+            name: 2 Hours
+            icon: mdi:timer-2
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_2h
+
+          - type: custom:button-card
+            name: 4 Hours
+            icon: mdi:timer-4
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_4h
+
+          - type: custom:button-card
+            name: 8 Hours
+            icon: mdi:timer-8
+            show_name: true
+            show_icon: true
+            color: auto
+            styles:
+              card:
+                - border-radius: 8px
+                - padding: 8px 4px
+              name:
+                - font-size: 60%
+                - margin-top: 4px
+              icon:
+                - width: 24px
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_8h

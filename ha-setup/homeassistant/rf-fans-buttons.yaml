@@ -1,0 +1,251 @@
+template:
+  - button:
+      # ========== LIVING ROOM FAN ==========
+      - name: "Living Room Fan Power"
+        icon: "mdi:fan"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: power
+
+      - name: "Living Room Fan Light"
+        icon: "mdi:lightbulb"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: light
+
+      - name: "Living Room Fan Speed 1"
+        icon: "mdi:fan-speed-1"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed1
+
+      - name: "Living Room Fan Speed 2"
+        icon: "mdi:fan-speed-2"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed2
+
+      - name: "Living Room Fan Speed 3"
+        icon: "mdi:fan-speed-3"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed3
+
+      - name: "Living Room Fan Speed 4"
+        icon: "mdi:numeric-4-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed4
+
+      - name: "Living Room Fan Speed 5"
+        icon: "mdi:numeric-5-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed5
+
+      - name: "Living Room Fan Speed 6"
+        icon: "mdi:numeric-6-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed6
+
+      - name: "Living Room Fan Speed 7"
+        icon: "mdi:numeric-7-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: speed7
+
+      - name: "Living Room Fan Reverse"
+        icon: "mdi:rotate-right"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: reverse
+
+      - name: "Living Room Fan Smart Mode"
+        icon: "mdi:brain"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: smart
+
+      - name: "Living Room Fan Natural Mode"
+        icon: "mdi:leaf"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: natural
+
+      - name: "Living Room Fan Timer Off"
+        icon: "mdi:timer-off"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: timer-off
+
+      - name: "Living Room Fan Timer 2H"
+        icon: "mdi:timer-2"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: timer-2h
+
+      - name: "Living Room Fan Timer 4H"
+        icon: "mdi:timer-4"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: timer-4h
+
+      - name: "Living Room Fan Timer 8H"
+        icon: "mdi:timer-8"
+        press:
+          service: mqtt.publish
+          data:
+            topic: living-room-fan
+            payload: timer-8h
+
+      # ========== BEDROOM FAN ==========
+      - name: "Bedroom Fan Power"
+        icon: "mdi:fan"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: power
+
+      - name: "Bedroom Fan Light"
+        icon: "mdi:lightbulb"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: light
+
+      - name: "Bedroom Fan Speed 1"
+        icon: "mdi:fan-speed-1"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed1
+
+      - name: "Bedroom Fan Speed 2"
+        icon: "mdi:fan-speed-2"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed2
+
+      - name: "Bedroom Fan Speed 3"
+        icon: "mdi:fan-speed-3"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed3
+
+      - name: "Bedroom Fan Speed 4"
+        icon: "mdi:numeric-4-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed4
+
+      - name: "Bedroom Fan Speed 5"
+        icon: "mdi:numeric-5-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed5
+
+      - name: "Bedroom Fan Speed 6"
+        icon: "mdi:numeric-6-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed6
+
+      - name: "Bedroom Fan Speed 7"
+        icon: "mdi:numeric-7-box"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: speed7
+
+      - name: "Bedroom Fan Reverse"
+        icon: "mdi:rotate-right"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: reverse
+
+      - name: "Bedroom Fan Smart Mode"
+        icon: "mdi:brain"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: smart
+
+      - name: "Bedroom Fan Natural Mode"
+        icon: "mdi:leaf"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: natural
+
+      - name: "Bedroom Fan Timer Off"
+        icon: "mdi:timer-off"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: timer-off
+
+      - name: "Bedroom Fan Timer 2H"
+        icon: "mdi:timer-2"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: timer-2h
+
+      - name: "Bedroom Fan Timer 4H"
+        icon: "mdi:timer-4"
+        press:
+          service: mqtt.publish
+          data:
+            topic: bedroom-fan
+            payload: timer-4h
