@@ -453,9 +453,10 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
+      - SYS_ADMIN
     volumes:
       - ../homeassistant:/config
-      - /run/dbus:/run/dbus:ro
+      - /run/dbus:/run/dbus # :ro for read only
       - /etc/localtime:/etc/localtime:ro
     environment:
       TZ: ${TZ}
@@ -520,7 +521,7 @@ services:
       WATCHTOWER_SCHEDULE: ${WATCHTOWER_SCHEDULE:-0 0 4 * * *}
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_ROLLING_RESTART: "true"
-      WATCHTOWER_NOTIFICATIONS: "off"
+      # WATCHTOWER_NOTIFICATIONS: "off"
       WATCHTOWER_DISABLE_CONTAINERS: "postgres_ha"
 
 volumes:

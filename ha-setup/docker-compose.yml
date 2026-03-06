@@ -19,9 +19,10 @@ services:
     cap_add:
       - NET_ADMIN   # Bluetooth adapter management & recovery
       - NET_RAW     # Raw socket access for Bluetooth
+      - SYS_ADMIN
     volumes:
       - ./config/homeassistant:/config
-      - /run/dbus:/run/dbus:ro          # D-Bus for Bluetooth
+      - /run/dbus:/run/dbus        # D-Bus for Bluetooth :ro for read-only
       - /etc/localtime:/etc/localtime:ro
     environment:
       TZ: ${TZ}
@@ -92,7 +93,7 @@ services:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_INCLUDE_RESTARTING: "false"
       WATCHTOWER_ROLLING_RESTART: "true"
-      WATCHTOWER_NOTIFICATIONS: "off"
+      # WATCHTOWER_NOTIFICATIONS: "off"
       # Exclude logto & postgres from auto-update to prevent data migration issues
       WATCHTOWER_DISABLE_CONTAINERS: "postgres_ha"
 
