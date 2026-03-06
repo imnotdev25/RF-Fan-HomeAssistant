@@ -10,6 +10,8 @@ const char* ssid = ""; # WIFI SSID
 const char* password = ""; # WIFI PASSWORD
 const char* mqtt_server = ""; # MQTT SERVER HOST
 const int mqtt_port = 1883;
+// const char* mqtt_user = "your_username";
+// const char* mqtt_password = "your_password";
 
 // MQTT Topics
 const char* livingRoomTopic = "living-room-fan";
@@ -152,7 +154,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     String clientId = "dual-rf-fans-" + String(random(0xffff), HEX);
     
-    if (client.connect(clientId.c_str())) {
+    if (client.connect(clientId.c_str())) {   //  Add User name and password here Ex. client.connect(clientId, user, password)
       Serial.println("connected");
       client.subscribe(livingRoomTopic);
       client.subscribe(bedroomTopic);

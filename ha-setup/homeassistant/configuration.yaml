@@ -1,0 +1,121 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  Home Assistant — configuration.yaml
+#  Generated for Docker + custom domain + Logto OAuth
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── Default config (enables most built-in integrations via UI) ─────────────
+default_config:
+
+# ── HTTP — required for reverse-proxy / custom domain ──────────────────────
+http:
+  # Trust proxy headers from your reverse proxy (Nginx, Caddy, Traefik, etc.)
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 127.0.0.1
+    - ::1
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+  # ip_ban_enabled: true
+  # login_attempts_threshold: 5
+
+# ── Authentication Providers ───────────────────────────────────────────────
+# The built-in HA auth is always kept as a fallback.
+# OIDC via Logto requires the `ha-oidc-auth` HACS custom component.
+# Install it through HACS → Integrations, then uncomment the oidc block.
+homeassistant:
+  auth_providers:
+    - type: homeassistant          # Local HA accounts (keep as fallback)
+    # ── Logto OIDC ─────────────────────────────────────────────────────
+    # Requires: https://github.com/christiaangoossens/hass-oidc-auth (HACS)
+    # After installing the HACS integration, uncomment the block below:
+    # - type: oidc
+    #   id: logto
+    #   name: "Sign in with Logto"
+    #   issuer: "https://your-logto-domain/oidc"
+    #   client_id: !secret logto_client_id
+    #   client_secret: !secret logto_client_secret
+    #   # Scopes returned by Logto
+    #   scope: "openid profile email"
+
+# ── Recorder — PostgreSQL for long-term history ────────────────────────────
+recorder:
+  # Connects to the postgres_ha container via the host loopback
+  db_url: !secret recorder_db_url
+  purge_keep_days: 90
+  commit_interval: 5
+  exclude:
+    domains:
+      - automation
+      - updater
+    entity_globs:
+      - sensor.weather_*
+
+# ── HomeKit Bridge ─────────────────────────────────────────────────────────
+# Exposes HA devices to Apple HomeKit.
+# `advertise_ip` must be the LAN IP of the Docker host.
+homekit:
+  - name: "Home Assistant Bridge"
+    port: 21063
+    # Replace with the actual LAN IP of your server
+    # (or set HA_HOMEKIT_ADVERTISE_IP in your env and use a template)
+    advertise_ip: !secret homekit_advertise_ip
+    filter:
+      include_domains:
+        - light
+        - switch
+        - cover
+        - climate
+        - alarm_control_panel
+        - lock
+        - sensor
+        - binary_sensor
+        - fan
+        - media_player
+
+# ── MQTT ───────────────────────────────────────────────────────────────────
+# Configured via UI (Settings → Devices → MQTT) is preferred.
+# Uncomment below for YAML-only setup:
+# mqtt:
+#   broker: localhost
+#   port: 1883
+#   # username: !secret mqtt_username
+#   # password: !secret mqtt_password
+#   discovery: true
+#   discovery_prefix: homeassistant
+
+# ── Lovelace (UI) ──────────────────────────────────────────────────────────
+lovelace:
+  mode: storage   # Use UI editor; switch to `yaml` for full YAML control
+
+# ── Logger ─────────────────────────────────────────────────────────────────
+logger:
+  default: warning
+  logs:
+    homeassistant.components.recorder: info
+    homeassistant.components.homekit: info
+
+
+# --- Custom Components -----------------------------------------------------
+
+fan: !include rf-fans.yaml
+
+# ── Includes (split config) ────────────────────────────────────────────────
+# Uncomment as you add more configuration:
+# automation: !include automations.yaml
+# script:     !include scripts.yaml
+# scene:      !include scenes.yaml
+
+# Zigbee2MQTT configuration
+# This file is auto-generated on first run if it does not exist.
+# See ADDONS.md for setup instructions.
+#
+# homeassistant: true
+# permit_join: true
+# mqtt:
+#   base_topic: zigbee2mqtt
+#   server: mqtt://localhost:1883
+# serial:
+#   port: /dev/ttyUSB0
+# frontend:
+#   port: 8080

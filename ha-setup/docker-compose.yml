@@ -1,0 +1,104 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  HOME ASSISTANT CORE STACK
+#  Services: Home Assistant · Mosquitto · PostgreSQL · Logto · Watchtower
+# ═══════════════════════════════════════════════════════════════════════════
+
+services:
+
+  # ── Home Assistant ─────────────────────────────────────────────────────
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: always
+    # Host networking is REQUIRED for:
+    #   • HomeKit bridge mDNS/Bonjour discovery
+    #   • Bluetooth via D-Bus
+    #   • Proper multicast for device discovery
+    network_mode: host
+    privileged: false
+    cap_add:
+      - NET_ADMIN   # Bluetooth adapter management & recovery
+      - NET_RAW     # Raw socket access for Bluetooth
+    volumes:
+      - ./config/homeassistant:/config
+      - /run/dbus:/run/dbus:ro          # D-Bus for Bluetooth
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: ${TZ}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsSL", "http://localhost:8123/api/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # ── Mosquitto MQTT Broker ──────────────────────────────────────────────
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:2
+    restart: always
+    ports:
+      - "1883:1883"    # MQTT
+      - "9001:9001"    # MQTT over WebSocket
+    volumes:
+      - ./config/mosquitto:/mosquitto/config:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t '$$SYS/healthcheck' -m '' -q 0 2>/dev/null || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ── PostgreSQL — Home Assistant long-term history ──────────────────────
+  postgres:
+    container_name: postgres_ha
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - "127.0.0.1:5432:5432"   # Bind only to loopback (HA uses host network)
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_ha_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ── Watchtower — Automatic image updates ──────────────────────────────
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: ${TZ}
+      WATCHTOWER_SCHEDULE: ${WATCHTOWER_SCHEDULE:-0 0 4 * * *}
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_INCLUDE_RESTARTING: "false"
+      WATCHTOWER_ROLLING_RESTART: "true"
+      WATCHTOWER_NOTIFICATIONS: "off"
+      # Exclude logto & postgres from auto-update to prevent data migration issues
+      WATCHTOWER_DISABLE_CONTAINERS: "postgres_ha"
+
+# ── Named volumes ──────────────────────────────────────────────────────────
+volumes:
+  postgres_ha_data:
+  mosquitto_data:
+  mosquitto_log:
+
