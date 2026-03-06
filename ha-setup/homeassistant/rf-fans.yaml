@@ -53,11 +53,30 @@ cards:
             ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
 
       # ── Section: Main Controls ──────────────────────────────────────────
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:4px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#38bdf8;box-shadow:0 0 8px #38bdf8;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Main Controls</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#38bdf8"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #38bdf8"
+            - padding-left: "8px"
+        name: "Main Controls"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -129,11 +148,30 @@ cards:
                 entity_id: button.living_room_fan_light
 
       # ── Section: Speed ─────────────────────────────────────────────────
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:8px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#34d399;box-shadow:0 0 8px #34d399;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Speed</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#34d399"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #34d399"
+            - padding-left: "8px"
+        name: "Speed"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -326,11 +364,30 @@ cards:
                 entity_id: button.living_room_fan_speed_7
 
       # ── Section: Modes ─────────────────────────────────────────────────
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:8px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#fb923c;box-shadow:0 0 8px #fb923c;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Modes</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#fb923c"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #fb923c"
+            - padding-left: "8px"
+        name: "Modes"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -428,11 +485,30 @@ cards:
                 entity_id: button.living_room_fan_natural_mode
 
       # ── Section: Timer ─────────────────────────────────────────────────
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:8px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#f87171;box-shadow:0 0 8px #f87171;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Timer</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#f87171"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #f87171"
+            - padding-left: "8px"
+        name: "Timer"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -584,11 +660,30 @@ cards:
           style: |
             ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
 
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:4px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#a78bfa;box-shadow:0 0 8px #a78bfa;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Main Controls</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#a78bfa"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #a78bfa"
+            - padding-left: "8px"
+        name: "Main Controls"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -659,11 +754,30 @@ cards:
               service_data:
                 entity_id: button.bedroom_fan_light
 
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:8px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#34d399;box-shadow:0 0 8px #34d399;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Speed</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#34d399"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #34d399"
+            - padding-left: "8px"
+        name: "Speed"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -854,11 +968,30 @@ cards:
               service_data:
                 entity_id: button.bedroom_fan_speed_7
 
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:8px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#fb923c;box-shadow:0 0 8px #fb923c;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Modes</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#fb923c"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #fb923c"
+            - padding-left: "8px"
+        name: "Modes"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
@@ -954,11 +1087,30 @@ cards:
               service_data:
                 entity_id: button.bedroom_fan_natural_mode
 
-      - type: markdown
-        content: "<div style='display:flex;align-items:center;gap:8px;padding:8px 14px 6px;'><div style='width:3px;height:12px;border-radius:2px;background:#f87171;box-shadow:0 0 8px #f87171;'></div><span style='font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;font-family:monospace;'>Timer</span></div>"
-        card_mod:
-          style: |
-            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#f87171"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #f87171"
+            - padding-left: "8px"
+        name: "Timer"
+        show_icon: false
+        show_name: true
 
       - type: custom:layout-card
         layout_type: grid
