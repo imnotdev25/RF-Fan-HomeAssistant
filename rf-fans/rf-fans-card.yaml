@@ -1,0 +1,1232 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  RF Fans — Beautiful Lovelace Card
+#
+#  Design: Dark industrial · colour-coded sections · glow accents
+#    🔵 Blue/Purple  — Power & Light per fan
+#    🟢 Green        — Speeds 1–7
+#    🟠 Amber        — Modes (Reverse / Smart / Natural)
+#    🔴 Red          — Timers
+#
+#  Requires (HACS → Frontend):
+#    • custom:button-card          (RomRider)
+#    • custom:layout-card          (thomasloven)
+#    • custom:vertical-stack-in-card  (ofekashery)
+#    • card-mod                    (thomasloven) ← for card background styling
+#
+#  Add to dashboard:
+#    Edit → Add Card → Manual → paste this YAML
+# ═══════════════════════════════════════════════════════════════════════════
+
+type: vertical-stack
+cards:
+
+  # ════════════════════════════════════════════════════════════════════════
+  #  LIVING ROOM FAN  (accent: #38bdf8 sky blue)
+  # ════════════════════════════════════════════════════════════════════════
+  - type: custom:vertical-stack-in-card
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(160deg, #0f172a 0%, #0d1424 60%, #0a0f1e 100%) !important;
+          border: 1px solid rgba(56,189,248,0.18) !important;
+          border-radius: 20px !important;
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.04),
+            0 16px 40px rgba(0,0,0,0.5),
+            0 0 60px rgba(56,189,248,0.06) !important;
+          padding: 4px 4px 8px !important;
+        }
+    cards:
+
+      # ── Fan Header ─────────────────────────────────────────────────────
+      - type: markdown
+        content: |
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 14px 8px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;">🌀</div>
+            <div>
+              <div style="font-size:1rem;font-weight:800;color:#e2e8f0;letter-spacing:-0.01em;font-family:'DM Sans',sans-serif;">Living Room</div>
+              <div style="font-size:0.6rem;color:#475569;letter-spacing:0.08em;text-transform:uppercase;font-family:monospace;">RF Fan Controller</div>
+            </div>
+          </div>
+        card_mod:
+          style: |
+            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
+
+      # ── Section: Main Controls ──────────────────────────────────────────
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#38bdf8"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #38bdf8"
+            - padding-left: "8px"
+        name: "Main Controls"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: 1fr 1fr
+          gap: 6px
+          padding: 0 10px 4px
+        cards:
+          - type: custom:button-card
+            name: Power
+            icon: mdi:power
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(56,189,248,0.06)"
+                - border: "1px solid rgba(56,189,248,0.2)"
+                - border-radius: "12px"
+                - padding: "14px 8px"
+                - box-shadow: "0 2px 12px rgba(0,0,0,0.4)"
+                - transition: "all 0.2s cubic-bezier(.4,0,.2,1)"
+              icon:
+                - color: "#38bdf8"
+                - width: "26px"
+                - filter: "drop-shadow(0 0 4px rgba(56,189,248,0.5))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.6rem"
+                - font-weight: "700"
+                - letter-spacing: "0.1em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_power
+
+          - type: custom:button-card
+            name: Light
+            icon: mdi:lightbulb
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(56,189,248,0.06)"
+                - border: "1px solid rgba(56,189,248,0.2)"
+                - border-radius: "12px"
+                - padding: "14px 8px"
+                - box-shadow: "0 2px 12px rgba(0,0,0,0.4)"
+                - transition: "all 0.2s cubic-bezier(.4,0,.2,1)"
+              icon:
+                - color: "#38bdf8"
+                - width: "26px"
+                - filter: "drop-shadow(0 0 4px rgba(56,189,248,0.5))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.6rem"
+                - font-weight: "700"
+                - letter-spacing: "0.1em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_light
+
+      # ── Section: Speed ─────────────────────────────────────────────────
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#34d399"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #34d399"
+            - padding-left: "8px"
+        name: "Speed"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(7, 1fr)
+          gap: 5px
+          padding: 0 10px 4px
+        cards:
+          - type: custom:button-card
+            name: "1"
+            icon: mdi:fan-speed-1
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+                - transition: "all 0.15s ease"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_1
+
+          - type: custom:button-card
+            name: "2"
+            icon: mdi:fan-speed-2
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_2
+
+          - type: custom:button-card
+            name: "3"
+            icon: mdi:fan-speed-3
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_3
+
+          - type: custom:button-card
+            name: "4"
+            icon: mdi:numeric-4-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_4
+
+          - type: custom:button-card
+            name: "5"
+            icon: mdi:numeric-5-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_5
+
+          - type: custom:button-card
+            name: "6"
+            icon: mdi:numeric-6-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_6
+
+          - type: custom:button-card
+            name: "7"
+            icon: mdi:numeric-7-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_speed_7
+
+      # ── Section: Modes ─────────────────────────────────────────────────
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#fb923c"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #fb923c"
+            - padding-left: "8px"
+        name: "Modes"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(3, 1fr)
+          gap: 6px
+          padding: 0 10px 4px
+        cards:
+          - type: custom:button-card
+            name: Reverse
+            icon: mdi:rotate-right
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(251,146,60,0.06)"
+                - border: "1px solid rgba(251,146,60,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+                - transition: "all 0.2s ease"
+              icon:
+                - color: "#fb923c"
+                - width: "24px"
+                - filter: "drop-shadow(0 0 3px rgba(251,146,60,0.4))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_reverse
+
+          - type: custom:button-card
+            name: Smart
+            icon: mdi:brain
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(251,146,60,0.06)"
+                - border: "1px solid rgba(251,146,60,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#fb923c"
+                - width: "24px"
+                - filter: "drop-shadow(0 0 3px rgba(251,146,60,0.4))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_smart_mode
+
+          - type: custom:button-card
+            name: Natural
+            icon: mdi:leaf
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(251,146,60,0.06)"
+                - border: "1px solid rgba(251,146,60,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#fb923c"
+                - width: "24px"
+                - filter: "drop-shadow(0 0 3px rgba(251,146,60,0.4))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_natural_mode
+
+      # ── Section: Timer ─────────────────────────────────────────────────
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#f87171"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #f87171"
+            - padding-left: "8px"
+        name: "Timer"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(4, 1fr)
+          gap: 6px
+          padding: 0 10px 10px
+        cards:
+          - type: custom:button-card
+            name: "Off"
+            icon: mdi:timer-off
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_off
+
+          - type: custom:button-card
+            name: "2H"
+            icon: mdi:timer-outline
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_2h
+
+          - type: custom:button-card
+            name: "4H"
+            icon: mdi:timer
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_4h
+
+          - type: custom:button-card
+            name: "8H"
+            icon: mdi:timer-sand
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.living_room_fan_timer_8h
+
+  # ════════════════════════════════════════════════════════════════════════
+  #  BEDROOM FAN  (accent: #a78bfa violet)
+  # ════════════════════════════════════════════════════════════════════════
+  - type: custom:vertical-stack-in-card
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(160deg, #0f172a 0%, #0d1424 60%, #0a0f1e 100%) !important;
+          border: 1px solid rgba(167,139,250,0.18) !important;
+          border-radius: 20px !important;
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.04),
+            0 16px 40px rgba(0,0,0,0.5),
+            0 0 60px rgba(167,139,250,0.06) !important;
+          padding: 4px 4px 8px !important;
+        }
+    cards:
+
+      - type: markdown
+        content: |
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 14px 8px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;">🌀</div>
+            <div>
+              <div style="font-size:1rem;font-weight:800;color:#e2e8f0;letter-spacing:-0.01em;font-family:'DM Sans',sans-serif;">Bedroom</div>
+              <div style="font-size:0.6rem;color:#475569;letter-spacing:0.08em;text-transform:uppercase;font-family:monospace;">RF Fan Controller</div>
+            </div>
+          </div>
+        card_mod:
+          style: |
+            ha-card { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
+
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#a78bfa"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #a78bfa"
+            - padding-left: "8px"
+        name: "Main Controls"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: 1fr 1fr
+          gap: 6px
+          padding: 0 10px 4px
+        cards:
+          - type: custom:button-card
+            name: Power
+            icon: mdi:power
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(167,139,250,0.06)"
+                - border: "1px solid rgba(167,139,250,0.2)"
+                - border-radius: "12px"
+                - padding: "14px 8px"
+                - box-shadow: "0 2px 12px rgba(0,0,0,0.4)"
+                - transition: "all 0.2s cubic-bezier(.4,0,.2,1)"
+              icon:
+                - color: "#a78bfa"
+                - width: "26px"
+                - filter: "drop-shadow(0 0 4px rgba(167,139,250,0.5))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.6rem"
+                - font-weight: "700"
+                - letter-spacing: "0.1em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_power
+
+          - type: custom:button-card
+            name: Light
+            icon: mdi:lightbulb
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(167,139,250,0.06)"
+                - border: "1px solid rgba(167,139,250,0.2)"
+                - border-radius: "12px"
+                - padding: "14px 8px"
+                - box-shadow: "0 2px 12px rgba(0,0,0,0.4)"
+                - transition: "all 0.2s cubic-bezier(.4,0,.2,1)"
+              icon:
+                - color: "#a78bfa"
+                - width: "26px"
+                - filter: "drop-shadow(0 0 4px rgba(167,139,250,0.5))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.6rem"
+                - font-weight: "700"
+                - letter-spacing: "0.1em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_light
+
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#34d399"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #34d399"
+            - padding-left: "8px"
+        name: "Speed"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(7, 1fr)
+          gap: 5px
+          padding: 0 10px 4px
+        cards:
+          - type: custom:button-card
+            name: "1"
+            icon: mdi:fan-speed-1
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_1
+
+          - type: custom:button-card
+            name: "2"
+            icon: mdi:fan-speed-2
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_2
+
+          - type: custom:button-card
+            name: "3"
+            icon: mdi:fan-speed-3
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_3
+
+          - type: custom:button-card
+            name: "4"
+            icon: mdi:numeric-4-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_4
+
+          - type: custom:button-card
+            name: "5"
+            icon: mdi:numeric-5-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_5
+
+          - type: custom:button-card
+            name: "6"
+            icon: mdi:numeric-6-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_6
+
+          - type: custom:button-card
+            name: "7"
+            icon: mdi:numeric-7-box
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(52,211,153,0.06)"
+                - border: "1px solid rgba(52,211,153,0.2)"
+                - border-radius: "10px"
+                - padding: "10px 3px"
+              icon:
+                - color: "#34d399"
+                - width: "20px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "4px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_speed_7
+
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#fb923c"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #fb923c"
+            - padding-left: "8px"
+        name: "Modes"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(3, 1fr)
+          gap: 6px
+          padding: 0 10px 4px
+        cards:
+          - type: custom:button-card
+            name: Reverse
+            icon: mdi:rotate-right
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(251,146,60,0.06)"
+                - border: "1px solid rgba(251,146,60,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#fb923c"
+                - width: "24px"
+                - filter: "drop-shadow(0 0 3px rgba(251,146,60,0.4))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_reverse
+
+          - type: custom:button-card
+            name: Smart
+            icon: mdi:brain
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(251,146,60,0.06)"
+                - border: "1px solid rgba(251,146,60,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#fb923c"
+                - width: "24px"
+                - filter: "drop-shadow(0 0 3px rgba(251,146,60,0.4))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_smart_mode
+
+          - type: custom:button-card
+            name: Natural
+            icon: mdi:leaf
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(251,146,60,0.06)"
+                - border: "1px solid rgba(251,146,60,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#fb923c"
+                - width: "24px"
+                - filter: "drop-shadow(0 0 3px rgba(251,146,60,0.4))"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_natural_mode
+
+      - type: custom:button-card
+        color_type: blank-card
+        styles:
+          card:
+            - background: "transparent"
+            - box-shadow: "none"
+            - border: "none"
+            - padding: "8px 14px 4px"
+            - height: "auto"
+          grid:
+            - grid-template-areas: '"n"'
+          name:
+            - font-size: "0.6rem"
+            - font-weight: "800"
+            - letter-spacing: "0.12em"
+            - text-transform: "uppercase"
+            - color: "#f87171"
+            - font-family: "monospace"
+            - justify-self: "start"
+            - border-left: "3px solid #f87171"
+            - padding-left: "8px"
+        name: "Timer"
+        show_icon: false
+        show_name: true
+
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: repeat(4, 1fr)
+          gap: 6px
+          padding: 0 10px 10px
+        cards:
+          - type: custom:button-card
+            name: "Off"
+            icon: mdi:timer-off
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_off
+
+          - type: custom:button-card
+            name: "2H"
+            icon: mdi:timer-outline
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_2h
+
+          - type: custom:button-card
+            name: "4H"
+            icon: mdi:timer
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_4h
+
+          - type: custom:button-card
+            name: "8H"
+            icon: mdi:timer-sand
+            show_name: true
+            show_icon: true
+            styles:
+              card:
+                - background: "rgba(248,113,113,0.06)"
+                - border: "1px solid rgba(248,113,113,0.2)"
+                - border-radius: "12px"
+                - padding: "13px 8px"
+              icon:
+                - color: "#f87171"
+                - width: "22px"
+              name:
+                - color: "#94a3b8"
+                - font-size: "0.58rem"
+                - font-weight: "700"
+                - letter-spacing: "0.08em"
+                - text-transform: "uppercase"
+                - font-family: "'DM Mono', monospace"
+                - margin-top: "6px"
+            tap_action:
+              action: call-service
+              service: button.press
+              service_data:
+                entity_id: button.bedroom_fan_timer_8h

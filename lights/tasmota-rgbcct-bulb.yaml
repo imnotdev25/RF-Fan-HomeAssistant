@@ -1,0 +1,78 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  Smitch SB161001 B22 — RGBCCT Bulb MQTT Entity
+#
+#  GPIO: PWM1=R  PWM2=G  PWM3=B  PWM4=Warm White  PWM5=Cold White
+#  Template: {"NAME":"Smitch SB161001 - B22","GPIO":[0,0,0,0,416,419,0,0,417,420,418,0,0,0],"FLAG":0,"BASE":18}
+#
+#  Replace 'tasmota_bulb' with your actual Tasmota MQTT topic.
+#
+#  Add to configuration.yaml:
+#    mqtt: !include tasmota-rgbcct-bulb.yaml
+#
+#  OR paste just the light: block inside your existing mqtt: section.
+#
+#  Tasmota console commands to run once on the device:
+#    SetOption19 0     ← disable autodiscovery (using manual config)
+#    SetOption105 1    ← White Blend Mode (better colours)
+#    Fade 1            ← smooth transitions (optional)
+#    Speed 5           ← transition speed (optional)
+# ═══════════════════════════════════════════════════════════════════════════
+
+light:
+  - name: "Smitch Bulb"
+    unique_id: smitch_b22_rgbcct_01
+
+    # ── Power ─────────────────────────────────────────────────────────────
+    command_topic: "cmnd/tasmota_bulb/POWER"
+    state_topic: "tele/tasmota_bulb/STATE"
+    state_value_template: "{{ value_json.POWER }}"
+    payload_on: "ON"
+    payload_off: "OFF"
+
+    # ── Availability ──────────────────────────────────────────────────────
+    availability_topic: "tele/tasmota_bulb/LWT"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+
+    # ── Brightness ────────────────────────────────────────────────────────
+    # Tasmota Dimmer: 0–100 → HA brightness: 0–255
+    brightness_command_topic: "cmnd/tasmota_bulb/Dimmer"
+    brightness_state_topic: "tele/tasmota_bulb/STATE"
+    brightness_scale: 100
+    brightness_value_template: "{{ value_json.Dimmer }}"
+    on_command_type: "brightness"
+
+    # ── RGB Color ─────────────────────────────────────────────────────────
+    # Color2 sends only the RGB channels, leaving white channels untouched
+    rgb_command_topic: "cmnd/tasmota_bulb/Color2"
+    rgb_state_topic: "tele/tasmota_bulb/STATE"
+    # Tasmota STATE returns Color as hex string e.g. "FF008000AA"
+    # First 6 chars = RRGGBB
+    rgb_value_template: >-
+      {{ value_json.Color[0:2] | int(base=16) }},
+      {{ value_json.Color[2:4] | int(base=16) }},
+      {{ value_json.Color[4:6] | int(base=16) }}
+    # HA sends "R,G,B" → convert to hex for Tasmota
+    rgb_command_template: >-
+      {{ '%02x%02x%02x' | format(red | int, green | int, blue | int) }}
+
+    # ── Color Temperature (Warm/Cool White) ───────────────────────────────
+    # Tasmota CT range: 153 (cold/6500K) → 500 (warm/2700K)  [mired scale]
+    # HA uses the same mired scale — no conversion needed
+    color_temp_command_topic: "cmnd/tasmota_bulb/CT"
+    color_temp_state_topic: "tele/tasmota_bulb/STATE"
+    color_temp_value_template: "{{ value_json.CT }}"
+    min_mireds: 153
+    max_mireds: 500
+
+    # ── Effects (Tasmota Schemes) ─────────────────────────────────────────
+    # 0=static, 1=wakeup, 2=cycle RGB, 3=cycle random, 4=clock
+    effect_command_topic: "cmnd/tasmota_bulb/Scheme"
+    effect_state_topic: "tele/tasmota_bulb/STATE"
+    effect_value_template: "{{ value_json.Scheme }}"
+    effect_list:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+      - "4"

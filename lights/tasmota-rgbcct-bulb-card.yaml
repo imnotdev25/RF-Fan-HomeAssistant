@@ -1,0 +1,963 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  Smitch B22 RGBCCT Bulb — Lovelace Card
+#
+#  Sections:
+#    • Power toggle
+#    • Colour — inline HA light card (RGB wheel + brightness)
+#    • White — CT slider (warm ↔ cool) + preset buttons
+#    • Quick Colours — RGB presets
+#    • Effects — Tasmota schemes
+#
+#  All buttons dim + disable when entity is unavailable/unknown.
+#
+#  Requires (HACS → Frontend):
+#    • custom:button-card   (RomRider)
+#    • custom:layout-card   (thomasloven)
+#    • card-mod             (thomasloven)
+# ═══════════════════════════════════════════════════════════════════════════
+
+type: custom:vertical-stack-in-card
+card_mod:
+  style: |
+    ha-card {
+      background: linear-gradient(160deg, #0f172a 0%, #0d1424 60%, #0a0f1e 100%) !important;
+      border: 1px solid rgba(250,204,21,0.18) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5) !important;
+      padding: 4px 4px 10px !important;
+    }
+cards:
+
+  # ── Section label: Power ──────────────────────────────────────────────────
+  - type: custom:button-card
+    color_type: blank-card
+    name: "Smitch Bulb"
+    show_name: true
+    show_icon: false
+    styles:
+      card:
+        - background: "transparent"
+        - box-shadow: "none"
+        - border: "none"
+        - padding: "8px 14px 4px"
+        - height: "auto"
+      grid:
+        - grid-template-areas: '"n"'
+      name:
+        - font-size: "0.6rem"
+        - font-weight: "800"
+        - letter-spacing: "0.12em"
+        - text-transform: "uppercase"
+        - color: "#facc15"
+        - font-family: "monospace"
+        - justify-self: "start"
+        - border-left: "3px solid #facc15"
+        - padding-left: "8px"
+    tap_action:
+      action: none
+
+  # ── Power ─────────────────────────────────────────────────────────────────
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: 1fr 1fr
+      gap: 6px
+      padding: 0 10px 4px
+    cards:
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Power
+        icon: mdi:power
+        show_name: true
+        show_icon: true
+        state:
+          - value: "on"
+            styles:
+              card:
+                - background: "rgba(250,204,21,0.2)"
+                - border: "1px solid rgba(250,204,21,0.6)"
+                - box-shadow: "0 0 14px rgba(250,204,21,0.3)"
+              icon:
+                - color: "#facc15"
+              name:
+                - color: "#facc15"
+            tap_action:
+              action: toggle
+          - value: "off"
+            styles:
+              card:
+                - background: "rgba(250,204,21,0.06)"
+                - border: "1px solid rgba(250,204,21,0.2)"
+              icon:
+                - color: "#78716c"
+              name:
+                - color: "#94a3b8"
+            tap_action:
+              action: toggle
+          - value: "unavailable"
+            styles:
+              card:
+                - background: "rgba(255,255,255,0.03)"
+                - border: "1px solid rgba(255,255,255,0.06)"
+                - opacity: "0.4"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.4"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(250,204,21,0.06)"
+            - border: "1px solid rgba(250,204,21,0.2)"
+            - border-radius: "12px"
+            - padding: "14px 8px"
+            - transition: "all 0.2s ease"
+          icon:
+            - color: "#facc15"
+            - width: "26px"
+          name:
+            - color: "#a0aec0"
+            - font-size: "0.6rem"
+            - font-weight: "700"
+            - letter-spacing: "0.1em"
+            - text-transform: "uppercase"
+            - font-family: "monospace"
+            - margin-top: "6px"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Colour
+        icon: mdi:palette
+        show_name: true
+        show_icon: true
+        state:
+          - value: "on"
+            styles:
+              card:
+                - background: "rgba(250,204,21,0.2)"
+                - border: "1px solid rgba(250,204,21,0.6)"
+                - box-shadow: "0 0 14px rgba(250,204,21,0.3)"
+              icon:
+                - color: "#facc15"
+              name:
+                - color: "#facc15"
+          - value: "off"
+            styles:
+              card:
+                - background: "rgba(250,204,21,0.06)"
+                - border: "1px solid rgba(250,204,21,0.2)"
+              icon:
+                - color: "#78716c"
+              name:
+                - color: "#94a3b8"
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.4"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.4"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(250,204,21,0.06)"
+            - border: "1px solid rgba(250,204,21,0.2)"
+            - border-radius: "12px"
+            - padding: "14px 8px"
+            - transition: "all 0.2s ease"
+          icon:
+            - color: "#facc15"
+            - width: "26px"
+          name:
+            - color: "#a0aec0"
+            - font-size: "0.6rem"
+            - font-weight: "700"
+            - letter-spacing: "0.1em"
+            - text-transform: "uppercase"
+            - font-family: "monospace"
+            - margin-top: "6px"
+        tap_action:
+          action: more-info
+
+  # ── RGB Colour wheel (inline HA light card) ───────────────────────────────
+  - type: light
+    entity: light.smitch_bulb
+    card_mod:
+      style: |
+        ha-card {
+          background: rgba(250,204,21,0.05) !important;
+          border: 1px solid rgba(250,204,21,0.15) !important;
+          border-radius: 12px !important;
+          box-shadow: none !important;
+          margin: 0 10px 4px !important;
+        }
+
+  # ── Section label: White ──────────────────────────────────────────────────
+  - type: custom:button-card
+    color_type: blank-card
+    name: "White"
+    show_name: true
+    show_icon: false
+    styles:
+      card:
+        - background: "transparent"
+        - box-shadow: "none"
+        - border: "none"
+        - padding: "8px 14px 4px"
+        - height: "auto"
+      grid:
+        - grid-template-areas: '"n"'
+      name:
+        - font-size: "0.6rem"
+        - font-weight: "800"
+        - letter-spacing: "0.12em"
+        - text-transform: "uppercase"
+        - color: "#e2e8f0"
+        - font-family: "monospace"
+        - justify-self: "start"
+        - border-left: "3px solid #e2e8f0"
+        - padding-left: "8px"
+    tap_action:
+      action: none
+
+  # ── CT presets: Warm → Neutral → Cool ────────────────────────────────────
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(3, 1fr)
+      gap: 6px
+      padding: 0 10px 4px
+    cards:
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Warm
+        icon: mdi:fire
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(251,146,60,0.08)"
+            - border: "1px solid rgba(251,146,60,0.25)"
+            - border-radius: "12px"
+            - padding: "14px 8px"
+            - transition: "all 0.2s ease"
+          icon:
+            - color: "#fb923c"
+            - width: "26px"
+          name:
+            - color: "#a0aec0"
+            - font-size: "0.6rem"
+            - font-weight: "700"
+            - letter-spacing: "0.1em"
+            - text-transform: "uppercase"
+            - font-family: "monospace"
+            - margin-top: "6px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/CT"
+            payload: "500"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Neutral
+        icon: mdi:white-balance-sunny
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(226,232,240,0.06)"
+            - border: "1px solid rgba(226,232,240,0.2)"
+            - border-radius: "12px"
+            - padding: "14px 8px"
+            - transition: "all 0.2s ease"
+          icon:
+            - color: "#e2e8f0"
+            - width: "26px"
+          name:
+            - color: "#a0aec0"
+            - font-size: "0.6rem"
+            - font-weight: "700"
+            - letter-spacing: "0.1em"
+            - text-transform: "uppercase"
+            - font-family: "monospace"
+            - margin-top: "6px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/CT"
+            payload: "326"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Cool
+        icon: mdi:snowflake
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(147,197,253,0.08)"
+            - border: "1px solid rgba(147,197,253,0.25)"
+            - border-radius: "12px"
+            - padding: "14px 8px"
+            - transition: "all 0.2s ease"
+          icon:
+            - color: "#93c5fd"
+            - width: "26px"
+          name:
+            - color: "#a0aec0"
+            - font-size: "0.6rem"
+            - font-weight: "700"
+            - letter-spacing: "0.1em"
+            - text-transform: "uppercase"
+            - font-family: "monospace"
+            - margin-top: "6px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/CT"
+            payload: "153"
+
+  # ── Section label: Quick Colours ─────────────────────────────────────────
+  - type: custom:button-card
+    color_type: blank-card
+    name: "Quick Colours"
+    show_name: true
+    show_icon: false
+    styles:
+      card:
+        - background: "transparent"
+        - box-shadow: "none"
+        - border: "none"
+        - padding: "8px 14px 4px"
+        - height: "auto"
+      grid:
+        - grid-template-areas: '"n"'
+      name:
+        - font-size: "0.6rem"
+        - font-weight: "800"
+        - letter-spacing: "0.12em"
+        - text-transform: "uppercase"
+        - color: "#a78bfa"
+        - font-family: "monospace"
+        - justify-self: "start"
+        - border-left: "3px solid #a78bfa"
+        - padding-left: "8px"
+    tap_action:
+      action: none
+
+  # ── RGB quick presets ──────────────────────────────────────────────────────
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(6, 1fr)
+      gap: 5px
+      padding: 0 10px 4px
+    cards:
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: "Red"
+        show_name: true
+        show_icon: false
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(239,68,68,0.12)"
+            - border: "1px solid rgba(239,68,68,0.35)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          name:
+            - color: "#ef4444"
+            - font-size: "0.58rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - letter-spacing: "0.05em"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Color2"
+            payload: "FF0000"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: "Green"
+        show_name: true
+        show_icon: false
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(34,197,94,0.12)"
+            - border: "1px solid rgba(34,197,94,0.35)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          name:
+            - color: "#22c55e"
+            - font-size: "0.58rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - letter-spacing: "0.05em"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Color2"
+            payload: "00FF00"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: "Blue"
+        show_name: true
+        show_icon: false
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(59,130,246,0.12)"
+            - border: "1px solid rgba(59,130,246,0.35)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          name:
+            - color: "#3b82f6"
+            - font-size: "0.58rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - letter-spacing: "0.05em"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Color2"
+            payload: "0000FF"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: "Amber"
+        show_name: true
+        show_icon: false
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(251,146,60,0.12)"
+            - border: "1px solid rgba(251,146,60,0.35)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          name:
+            - color: "#fb923c"
+            - font-size: "0.58rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - letter-spacing: "0.05em"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Color2"
+            payload: "FF6000"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: "Pink"
+        show_name: true
+        show_icon: false
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(236,72,153,0.12)"
+            - border: "1px solid rgba(236,72,153,0.35)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          name:
+            - color: "#ec4899"
+            - font-size: "0.58rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - letter-spacing: "0.05em"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Color2"
+            payload: "FF00FF"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: "White"
+        show_name: true
+        show_icon: false
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+              name:
+                - color: "#475569"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.3"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(248,250,252,0.08)"
+            - border: "1px solid rgba(248,250,252,0.25)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          name:
+            - color: "#f8fafc"
+            - font-size: "0.58rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - letter-spacing: "0.05em"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Color2"
+            payload: "FFFFFF"
+
+  # ── Section label: Effects ────────────────────────────────────────────────
+  - type: custom:button-card
+    color_type: blank-card
+    name: "Effects"
+    show_name: true
+    show_icon: false
+    styles:
+      card:
+        - background: "transparent"
+        - box-shadow: "none"
+        - border: "none"
+        - padding: "8px 14px 4px"
+        - height: "auto"
+      grid:
+        - grid-template-areas: '"n"'
+      name:
+        - font-size: "0.6rem"
+        - font-weight: "800"
+        - letter-spacing: "0.12em"
+        - text-transform: "uppercase"
+        - color: "#34d399"
+        - font-family: "monospace"
+        - justify-self: "start"
+        - border-left: "3px solid #34d399"
+        - padding-left: "8px"
+    tap_action:
+      action: none
+
+  # ── Tasmota schemes ───────────────────────────────────────────────────────
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(5, 1fr)
+      gap: 5px
+      padding: 0 10px 4px
+    cards:
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Static
+        icon: mdi:circle
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(52,211,153,0.06)"
+            - border: "1px solid rgba(52,211,153,0.2)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          icon:
+            - color: "#34d399"
+            - width: "18px"
+          name:
+            - color: "#94a3b8"
+            - font-size: "0.55rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - margin-top: "4px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Scheme"
+            payload: "0"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Wake
+        icon: mdi:weather-sunset-up
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(52,211,153,0.06)"
+            - border: "1px solid rgba(52,211,153,0.2)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          icon:
+            - color: "#34d399"
+            - width: "18px"
+          name:
+            - color: "#94a3b8"
+            - font-size: "0.55rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - margin-top: "4px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Scheme"
+            payload: "1"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Cycle
+        icon: mdi:sync
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(52,211,153,0.06)"
+            - border: "1px solid rgba(52,211,153,0.2)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          icon:
+            - color: "#34d399"
+            - width: "18px"
+          name:
+            - color: "#94a3b8"
+            - font-size: "0.55rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - margin-top: "4px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Scheme"
+            payload: "2"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Random
+        icon: mdi:shuffle-variant
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(52,211,153,0.06)"
+            - border: "1px solid rgba(52,211,153,0.2)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          icon:
+            - color: "#34d399"
+            - width: "18px"
+          name:
+            - color: "#94a3b8"
+            - font-size: "0.55rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - margin-top: "4px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Scheme"
+            payload: "3"
+
+      - type: custom:button-card
+        entity: light.smitch_bulb
+        name: Clock
+        icon: mdi:clock-outline
+        show_name: true
+        show_icon: true
+        state:
+          - value: "unavailable"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+              icon:
+                - color: "#334155"
+              name:
+                - color: "#334155"
+            tap_action:
+              action: none
+          - value: "unknown"
+            styles:
+              card:
+                - opacity: "0.35"
+                - cursor: "not-allowed"
+            tap_action:
+              action: none
+        styles:
+          card:
+            - background: "rgba(52,211,153,0.06)"
+            - border: "1px solid rgba(52,211,153,0.2)"
+            - border-radius: "10px"
+            - padding: "10px 4px"
+          icon:
+            - color: "#34d399"
+            - width: "18px"
+          name:
+            - color: "#94a3b8"
+            - font-size: "0.55rem"
+            - font-weight: "700"
+            - font-family: "monospace"
+            - margin-top: "4px"
+        tap_action:
+          action: call-service
+          service: mqtt.publish
+          service_data:
+            topic: "cmnd/tasmota_bulb/Scheme"
+            payload: "4"

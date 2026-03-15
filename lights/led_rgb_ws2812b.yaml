@@ -1,0 +1,88 @@
+esphome:
+  name: ledbridge
+
+esp8266:
+  board: nodemcuv2
+
+wifi:
+  ssid: "<SSID>"
+  password: "<PASSWORD>"
+  ap:
+    ssid: "lights Driver Fallback"
+    password: "fallback123"
+
+captive_portal:
+logger:
+api:
+ota:
+  - platform: esphome
+
+# ─── NeoPixel Strip ───────────────────────────────────────────────────────
+light:
+  - platform: neopixelbus
+    id: main_strip
+    type: GRB
+    variant: WS2812X
+    pin: GPIO02
+    num_leds: 300
+    name: "NeoPixel Light"
+    restore_mode: RESTORE_DEFAULT_OFF
+    effects:
+      - addressable_rainbow:
+      - addressable_scan:
+      - addressable_twinkle:
+      - addressable_lambda:
+          name: "Hold"          # keeps individually-set pixels intact
+          update_interval: 0ms
+          lambda: |-
+            // do nothing — pixels are set externally via set_pixel script
+
+# ─── Individual pixel control ─────────────────────────────────────────────
+#
+#  Exposes a Home Assistant service:
+#    esphome.ledbridge_set_pixel
+#  Parameters:
+#    led_index  (int 0-299)
+#    red        (float 0.0-1.0)
+#    green      (float 0.0-1.0)
+#    blue       (float 0.0-1.0)
+#    brightness (float 0.0-1.0)  — multiplied into each channel
+#
+#  Usage in HA Developer Tools → Services:
+#    service: esphome.ledbridge_set_pixel
+#    data:
+#      led_index: 42
+#      red: 1.0
+#      green: 0.27
+#      blue: 0.0
+#      brightness: 0.8
+
+script:
+  - id: set_pixel
+    parameters:
+      led_index: int
+      red: float
+      green: float
+      blue: float
+      brightness: float
+    then:
+      - lambda: |-
+          if (led_index < 0 || led_index >= 300) return;
+          float r = red   * brightness;
+          float g = green * brightness;
+          float b = blue  * brightness;
+          // Ensure "Hold" effect is active so strip doesn't override pixels
+          auto call = id(main_strip).turn_on();
+          call.set_effect("Hold");
+          call.perform();
+          // Set the individual LED
+          auto light_it = id(main_strip).make_call();
+          id(main_strip).get_output()->get_effect_data();
+          // Direct addressable write
+          auto* out = static_cast<esphome::light::AddressableLight*>(id(main_strip).get_output());
+          (*out)[led_index] = esphome::Color(
+            (uint8_t)(r * 255),
+            (uint8_t)(g * 255),
+            (uint8_t)(b * 255)
+          );
+          out->schedule_show();

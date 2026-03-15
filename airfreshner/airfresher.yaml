@@ -1,9 +1,9 @@
-# ESPHome YAML for Godrej Aer Smart Matic
-# Flash to an ESP32 with BLE support
-# Replace <MAC Address> with your unit’s MAC
-
 esphome:
   name: aermaticbridge
+  on_boot:
+    priority: -100
+    then:
+      - deep_sleep.prevent: deep_sleep_1
 
 esp32:
   board: esp32-c6-devkitc-1
@@ -15,29 +15,133 @@ esp32:
 wifi:
   ssid: "<SSID>"
   password: "<PASSWORD>"
+  ap:
+    ssid: "AerMatic Fallback"
+    password: "fallback123"
 
-# Enable logging & OTA
+captive_portal:
+
 logger:
 
 api:
+  on_client_connected:
+    then:
+      - deep_sleep.prevent: deep_sleep_1
+  on_client_disconnected:
+    then:
+      - deep_sleep.allow: deep_sleep_1
 
 ota:
   - platform: esphome
 
+# ─── Deep Sleep ──────────────────────────────────────────────
+deep_sleep:
+  id: deep_sleep_1
+  run_duration: 30s
+  sleep_duration: 5min
 
+# ─── BLE Stack ───────────────────────────────────────────────
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 5s
+    window: 5s
+    active: true
 
-# BLE Client definition
 ble_client:
   - mac_address: "<MAC-ADDRESS>"
     id: godrej_aer
+    on_connect:
+      then:
+        - logger.log: "Aer Matic connected"
+    on_disconnect:
+      then:
+        - logger.log: "Aer Matic disconnected"
 
-# Virtual switch that triggers a spray
+# ─── GPIO: Enable battery ADC circuit on XIAO ESP32C6 ────────
+output:
+  - platform: gpio
+    pin: GPIO14
+    id: bat_read_enable
+
+# ─── Sensors ─────────────────────────────────────────────────
+sensor:
+  # --- XIAO ESP32C6 onboard battery voltage ---
+  - platform: adc
+    id: bat_voltage
+    pin: GPIO0
+    name: "XIAO Battery Voltage"
+    attenuation: 12db
+    # samples: 10                 # average 10 readings for stability
+    update_interval: 60s
+    accuracy_decimals: 2
+    unit_of_measurement: "V"
+    device_class: voltage
+    entity_category: diagnostic
+    icon: mdi:battery-charging
+    filters:
+      - multiply: 2.0           # compensate for 1:1 voltage divider
+      - median:
+          window_size: 5
+          send_every: 5
+          send_first_at: 1
+    on_value:
+      then:
+        - component.update: bat_percent
+
+  # --- Convert voltage → percentage (LiPo: 3.0V=0%, 4.2V=100%) ---
+  - platform: template
+    id: bat_percent
+    name: "XIAO Battery Level"
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    accuracy_decimals: 0
+    icon: mdi:battery
+    lambda: |-
+      float voltage = id(bat_voltage).state;
+      float pct = (voltage - 3.0) / (4.2 - 3.0) * 100.0;
+      if (pct > 100.0) return 100.0;
+      if (pct < 0.0) return 0.0;
+      return pct;
+
+  # --- Godrej Aer BLE battery (Standard GATT 0x180F) ---
+  - platform: ble_client
+    type: characteristic
+    ble_client_id: godrej_aer
+    name: "Aer Matic Battery Level"
+    service_uuid: '180f'
+    characteristic_uuid: '2a19'
+    icon: 'mdi:battery'
+    unit_of_measurement: '%'
+    device_class: battery
+    state_class: measurement
+    update_interval: 60s
+
+  # --- BLE signal strength ---
+  - platform: ble_rssi
+    mac_address: "<MAC-ADDRESS>"
+    name: "Aer Matic RSSI"
+    icon: 'mdi:signal'
+    update_interval: 30s
+
+  # --- Wakeup cause (diagnostic) ---
+  - platform: template
+    name: "Wakeup Cause"
+    accuracy_decimals: 0
+    entity_category: diagnostic
+    lambda: return esp_sleep_get_wakeup_cause();
+
+# ─── Switch ──────────────────────────────────────────────────
 switch:
   - platform: template
     name: "Aer Matic Spray"
     turn_on_action:
+      - deep_sleep.prevent: deep_sleep_1
       - ble_client.ble_write:
           id: godrej_aer
           service_uuid: 6E400000-B5A3-F393-E0A9-E50E24DCCA9E
           characteristic_uuid: 6E400003-B5A3-F393-E0A9-E50E24DCCA9E
-          value: [0xbf, 0x62, 0x6D, 0x54, 0x18, 0x68, 0x62, 0x6D, 0x4E, 0x18, 0x9A, 0x62, 0x72, 0x49, 0x00, 0xFF]
+          value: [0xbf, 0x62, 0x6D, 0x54, 0x18, 0x68, 0x62, 0x6D,
+                  0x4E, 0x18, 0x9A, 0x62, 0x72, 0x49, 0x00, 0xFF]
+      - delay: 3s
+      - deep_sleep.allow: deep_sleep_1
